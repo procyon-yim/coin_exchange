@@ -5,6 +5,7 @@ import smtplib
 from email.mime.text import MIMEText
 import random
 
+# 만약에 이렇게 주석을 추가해서 깃허브에 올린다면?
 
 def send_alarm(text):
     sendEmail = "max5972@naver.com"
