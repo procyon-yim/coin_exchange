@@ -33,7 +33,7 @@ def send_alarm(text):
 def get_target_price(tickers, k_value):
     '''
     <변동성 돌파 전략>을 바탕으로 해당 일의 매수가를 구해주는 메소드
-    :param ticker: (str) 코인의 티커
+    :param tickers: (list of str) 티커 목록
     :param k_value: (float) k값. 주로 0.5 보수적일수록 높게, 도전적일수록 낮게
     :return: (float) 당일 매입가
     '''
@@ -120,4 +120,3 @@ def renew(user, user_account):
         if currency['currency'] != 'KRW':
             user.sell_market_order("KRW-" + currency['currency'], currency['balance'])
             time.sleep(0.2)  # json error 대비
-
