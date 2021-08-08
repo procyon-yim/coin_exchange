@@ -5,10 +5,9 @@ with open('upbit.txt') as f:
     keys = f.readlines()
     access_key = keys[0][:-1]
     secret_key = keys[1]
-print(access_key, secret_key)
+    
 jaebeom = pyupbit.Upbit(access_key, secret_key)
 time.sleep(0.2)
-print(jaebeom.get_balance())
 majors, k = ['KRW-BTC', 'KRW-ETH', 'KRW-XRP', 'KRW-BCH', 'KRW-ETC', 'KRW-BTG'], 0.5
 
 coins = select_coin(6, majors)  # 투자종목 선택하는데 25초 소요
