@@ -9,6 +9,7 @@ import random
 def send_alarm(text):
     sendEmail = "max5972@naver.com"
     recvEmail = "jaebeom.yim@seh.ox.ac.uk"
+<<<<<<< HEAD
     with open('mail.txt') as f:
         password = f.readline()
 

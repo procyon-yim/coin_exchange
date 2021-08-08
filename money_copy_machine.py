@@ -1,6 +1,8 @@
 from coin_exchanger import *
 
+<<<<<<< HEAD
 with open('upbit.txt') as f:
+
     keys = f.readlines()
     access_key = keys[0][:-1]
     secret_key = keys[1]
