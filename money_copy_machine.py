@@ -5,7 +5,7 @@ with open('upbit.txt') as f:
     keys = f.readlines()
     access_key = keys[0][:-1]
     secret_key = keys[1]
-
+print(access_key, secret_key)
 jaebeom = pyupbit.Upbit(access_key, secret_key)
 time.sleep(0.2)
 print(jaebeom.get_balance())
