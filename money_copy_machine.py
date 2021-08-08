@@ -1,6 +1,5 @@
 from coin_exchanger import *
 
-<<<<<<< HEAD
 with open('upbit.txt') as f:
 
     keys = f.readlines()
