@@ -5,9 +5,13 @@ import smtplib
 from email.mime.text import MIMEText
 import random
 
-# 만약에 이렇게 주석을 추가해서 깃허브에 올린다면?
 
 def send_alarm(text):
+    '''
+    학교 이메일로 알림 보내주는 메소드.
+    :param text: (str) 보낼 메세지
+    :return: None, 메일을 보내줌.
+    '''
     sendEmail = "max5972@naver.com"
     recvEmail = "jaebeom.yim@seh.ox.ac.uk"
 
@@ -34,9 +38,9 @@ def send_alarm(text):
 def get_target_price(tickers, k_value):
     '''
     <변동성 돌파 전략>을 바탕으로 해당 일의 매수가를 구해주는 메소드
-    :param tickers: (list of str) 티커 목록
-    :param k_value: (float) k값. 주로 0.5 보수적일수록 높게, 도전적일수록 낮게
-    :return: (float) 당일 매입가
+    :param tickers: (list) 티커 목록
+    :param k_value: (float) k값. 주로 0.5인데 보수적일수록 높게, 도전적일수록 낮게
+    :return: (dict) keys = tickers / values = target price
     '''
 
     target = dict()
@@ -115,7 +119,12 @@ def select_coin(num, major_list):  # 15초 정도 걸림.
 
 
 def renew(user, user_account):
-
+    '''
+    매일 12시에 계좌 리셋해주는 메소드
+    :param user: (class: Upbit) 사용자 계정
+    :param user_account: (dict) 사용자 계좌 현황 딕셔너리 (user.get_balances())
+    :return: None.
+    '''
     for currency in user_account:  # 계좌 완전히 리셋
 
         if currency['currency'] != 'KRW':
