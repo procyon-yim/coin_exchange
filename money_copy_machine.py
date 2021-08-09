@@ -16,7 +16,6 @@ target_price = get_target_price(coins, k)  # 목표가 계산하는데 1초 소�
 
 now = datetime.datetime.now()
 mid = datetime.datetime(now.year, now.month, now.day) + datetime.timedelta(days=1)
-afternoon = datetime.datetime(now.year, now.month, now.day) + datetime.timedelta(hours=12)
 
 send_alarm('오늘의 리포트입니다. 현재 원화 잔고 {0}KRW 입니다. 오늘 하루동안 매수를 시도할 코인은 {1}입니다. 현재 서버 시각 {2}'.format(int(jaebeom.get_balance()), target_price, now))
 time.sleep(0.5)  # json error
@@ -24,9 +23,6 @@ time.sleep(0.5)  # json error
 try:
     while True:
         now = datetime.datetime.now()
-
-        if afternoon < now < afternoon + datetime.timedelta(seconds=10):
-            send_alarm("좋은 오후입니다. 현재 coin exchanger 잘 돌아가고 있습니다. *^^*")
 
         if mid < now < mid + datetime.timedelta(seconds=10):
             try:
