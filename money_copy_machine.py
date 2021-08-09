@@ -8,7 +8,8 @@ with open('upbit.txt') as f:
 
 jaebeom = pyupbit.Upbit(access_key, secret_key)
 time.sleep(0.2)
-majors, k = ['KRW-BTC', 'KRW-ETH', 'KRW-XRP', 'KRW-BCH', 'KRW-ETC', 'KRW-BTG'], 0.5
+majors = ['KRW-BTC', 'KRW-ETH', 'KRW-XRP', 'KRW-BCH', 'KRW-ETC', 'KRW-BTG']
+k = 0.5
 
 coins = select_coin(6, majors)  # 투자종목 선택하는데 25초 소요
 target_price = get_target_price(coins, k)  # 목표가 계산하는데 1초 소요
@@ -36,7 +37,7 @@ try:
                 target_price = get_target_price(coins, k)
 
                 mid = datetime.datetime(now.year, now.month, now.day) + datetime.timedelta(days=1)
-                send_alarm('오늘의 리포트입니다. 현재 원화 잔고 {0}KRW 입니다. 오늘 하루동안 매수를 시도할 코인은 {1}입니다. 현재 서버시각 {2}'.format(int(jaebeom.get_balance()), coins, datetime.datetime.now()))
+                send_alarm('오늘의 리포트입니다. 현재 원화 잔고 {0}KRW 입니다. 오늘 하루동안 매수를 시도할 코인은 {1}입니다. 현재 서버시각 {2}'.format(int(jaebeom.get_balance()), target_price, datetime.datetime.now()))
                 time.sleep(0.5)  # json error
 
             except TypeError:
