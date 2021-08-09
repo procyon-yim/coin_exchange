@@ -13,11 +13,12 @@ k = 0.5
 
 coins = select_coin(6, majors)  # 투자종목 선택하는데 25초 소요
 target_price = get_target_price(coins, k)  # 목표가 계산하는데 1초 소요
+start_balance  = jaebeom.get_balance()
 
 now = datetime.datetime.now()
 mid = datetime.datetime(now.year, now.month, now.day) + datetime.timedelta(days=1)
 
-send_alarm('오늘의 리포트입니다. 현재 원화 잔고 {0}KRW 입니다. 오늘 하루동안 매수를 시도할 코인은 {1}입니다. 현재 서버 시각 {2}'.format(int(jaebeom.get_balance()), target_price, now))
+send_alarm('오늘의 리포트입니다. 현재 원화 잔고 {0}KRW 입니다. 오늘 하루동안 매수를 시도할 코인은 {1}입니다. 현재 서버 시각 {2}'.format(int(start_balance), target_price, now))
 time.sleep(0.5)  # json error
 
 try:
@@ -31,9 +32,9 @@ try:
 
                 coins = select_coin(6, majors)
                 target_price = get_target_price(coins, k)
-
+                start_balance = jaebeom.get_balance()
                 mid = datetime.datetime(now.year, now.month, now.day) + datetime.timedelta(days=1)
-                send_alarm('오늘의 리포트입니다. 현재 원화 잔고 {0}KRW 입니다. 오늘 하루동안 매수를 시도할 코인은 {1}입니다. 현재 서버시각 {2}'.format(int(jaebeom.get_balance()), target_price, now))
+                send_alarm('오늘의 리포트입니다. 현재 원화 잔고 {0}KRW 입니다. 오늘 하루동안 매수를 시도할 코인은 {1}입니다. 현재 서버시각 {2}'.format(int(start_balance), target_price, now))
                 time.sleep(0.5)  # json error
 
             except TypeError:
@@ -52,11 +53,10 @@ try:
 
                 if current_price >= target_price[coin]:
                     amt = get_amount(coins)[coin]
-                    krw = jaebeom.get_balance()
                     time.sleep(0.1)  # json error 방지
-                    jaebeom.buy_market_order(coin, krw * amt)
+                    jaebeom.buy_market_order(coin, start_balance * amt)
                     time.sleep(0.1)  # json error 방지
-                    send_alarm('{0}을 {1}KRW 만큼 구매했습니다.'.format(coin, krw * amt))
+                    send_alarm('{0}을 {1}KRW 만큼 구매했습니다.'.format(coin, start_balance * amt))
 
                     coins.remove(coin)
 
@@ -69,11 +69,10 @@ try:
 
                     if current_price >= target_price[coin]:
                         amt = get_amount(coins)[coin]
-                        krw = jaebeom.get_balance()
                         time.sleep(0.3)  # json error 방지
-                        jaebeom.buy_market_order(coin, krw * amt)
+                        jaebeom.buy_market_order(coin, start_balance * amt)
                         time.sleep(0.3)  # json error 방지
-                        send_alarm('{0}을 {1}KRW 만큼 구매했습니다.'.format(coin, krw * amt))
+                        send_alarm('{0}을 {1}KRW 만큼 구매했습니다.'.format(coin, start_balance * amt))
 
                         coins.remove(coin)
             except TypeError:
