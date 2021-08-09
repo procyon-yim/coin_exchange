@@ -13,7 +13,7 @@ k = 0.5
 
 coins = select_coin(6, majors)  # 투자종목 선택하는데 25초 소요
 target_price = get_target_price(coins, k)  # 목표가 계산하는데 1초 소요
-start_balance  = jaebeom.get_balance()
+start_balance  = jaebeom.get_balance()  # 이 돈을 가지고 시작하는거다.
 
 now = datetime.datetime.now()
 mid = datetime.datetime(now.year, now.month, now.day) + datetime.timedelta(days=1)
