@@ -40,7 +40,7 @@ try:
         try:
             for coin in coins:
                 current_price = pyupbit.get_current_price(coin)
-                time.sleep(0.1)  # json 방지
+                time.sleep(0.1)  # json 방지 (quotation api는 초당 10회 가능)
 
                 if current_price >= target_price[coin]:
                     amt = get_amount(coins)[coin]
