@@ -33,25 +33,25 @@ try:
                 send_alarm('mail.txt', '자정 프로세스 중 API를 너무 많이 호출했습니다 (JSONDecodeError). AWS 서버에 접속해 확인해주세요. MCM을 종료합니다.')
                 break
 
-            except:
-                send_alarm('mail.txt', '자정 프로세스 중 원인 불명의 에러가 발생했습니다. AWS 서버에 접속해 확인해주세요. MCM을 종료합니다.')
+            except Exception as e:
+                send_alarm('mail.txt', '자정 프로세스 중 에러 발생. {} MCM을 종료합니다.'.format(e))
                 break
 
         try:
             for coin in coins:
                 current_price = pyupbit.get_current_price(coin)
-                time.sleep(0.1)  # json 방지 (quotation api는 초당 10회 가능)
+                time.sleep(0.1)  # (quotation api는 초당 10회 가능)
 
                 if current_price >= target_price[coin]:
                     amt = get_amount(coins)[coin]
                     time.sleep(0.1)  # json error 방지
                     jaebeom.buy_market_order(coin, start_balance * amt)
                     time.sleep(0.1)  # json error 방지
-                    send_alarm('{0}을 {1}KRW 만큼 구매했습니다.'.format(coin, start_balance * amt))
+                    send_alarm('mail.txt', '{0}을 {1}KRW 만큼 구매했습니다.'.format(coin, start_balance * amt))
                     coins.remove(coin)
 
-        except:
-            send_alarm('mail.txt', "매매 프로세스 중 에러가 발생했습니다. AWS 서버에 접속해 확인해주세요. MCM을 종료합니다.")
+        except Exception as e:
+            send_alarm('mail.txt', "매매 프로세스 중 에러 발생. {}. MCM을 종료합니다.".format(e))
             break
 
         time.sleep(1)
