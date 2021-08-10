@@ -6,17 +6,18 @@ from email.mime.text import MIMEText
 import random
 
 
-def send_alarm(text):
+def send_alarm(mail_info, text):
     '''
-    학교 이메일로 알림 보내주는 메소드.
+    이메일 보내주는 메소드
+    :param mail_info: (txt file) 메일 보내는 주소, 받는 주소, 보내는 주소의 비밀번호
     :param text: (str) 보낼 메세지
-    :return: None, 메일을 보내줌.
+    :return: None
     '''
-    sendEmail = "max5972@naver.com"
-    recvEmail = "jaebeom.yim@seh.ox.ac.uk"
-
     with open('mail.txt') as f:
-        password = f.readline()
+        file = f.readlines()
+        sendEmail = file[0][:-1]
+        password = file[1][:-1]
+        recvEmail = file[2]
 
     smtpName = "smtp.naver.com"  # smtp 서버 주소
     smtpPort = 587  # smtp 포트 번호
