@@ -47,7 +47,6 @@ try:
                     time.sleep(0.1)  # json error 방지
                     jaebeom.buy_market_order(coin, start_balance * amt)
                     time.sleep(0.1)  # json error 방지
-                    send_alarm('mail.txt', '{0}을 {1}KRW 만큼 구매했습니다.'.format(coin, start_balance * amt))
                     coins.remove(coin)
 
         except Exception as e:
