@@ -52,7 +52,8 @@ def get_target_price(tickers, k_value):
         yesterday_high = max(df['high'])
         yesterday_low = min(df['low'])
         target[ticker] = today_open + (yesterday_high - yesterday_low) * k_value
-        time.sleep(0.1)  # json 오류 때문에.
+        time.sleep(0.1)
+        # jsonDecodeError 때문에. (candle 조회는 초당 10회 가능함. https://pyupbit.readthedocs.io/en/latest/quotation.html 참고)
 
     return target
 
@@ -72,7 +73,9 @@ def get_amount(tickers):
         tgt = 0.02  # percentage
         ptg = (tgt / delta)/len(tickers)
         amount[ticker] = min(ptg, 1/6)
-        time.sleep(0.1)  # json 오류 때문에.
+        time.sleep(0.1)
+        # jsonDecodeError 때문에. (candle 조회는 초당 10회 가능함. https://pyupbit.readthedocs.io/en/latest/quotation.html 참고)
+
 
     return amount
 
@@ -129,4 +132,4 @@ def renew(user, user_account):
 
         if currency['currency'] != 'KRW':
             user.sell_market_order("KRW-" + currency['currency'], currency['balance'])
-            time.sleep(0.2)  # json error 대비
+            time.sleep(0.2)  # json error 대비  (주문은 1초에 8회까지 가능)
