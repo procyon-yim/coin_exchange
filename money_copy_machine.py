@@ -30,7 +30,7 @@ try:
                 send_alarm('mail.txt', '현재 시각 {2}, 현재 잔고 {0}KRW. 매수를 시도할 코인은 {1}.'.format(int(start_balance), target_price, now))
 
             except TypeError:
-                send_alarm('mail.txt', '자정 프로세스 중 API를 너무 많이 호출했습니다 (JSONDecodeError). AWS 서버에 접속해 확인해주세요. MCM을 종료합니다.')
+                send_alarm('mail.txt', '자정 프로세스 중 API를 너무 많이 호출했습니다 (JSONDecodeError). MCM을 종료합니다.')
                 break
 
             except Exception as e:
@@ -49,11 +49,24 @@ try:
                     time.sleep(0.1)  # json error 방지
                     coins.remove(coin)
 
-        except Exception as e:
-            send_alarm('mail.txt', "매매 프로세스 중 에러 발생. {}. MCM을 종료합니다.".format(e))
-            break
+        except:
+            try:
+                for coin in coins:
+                    current_price = pyupbit.get_current_price(coin)
+                    time.sleep(0.5)  # (quotation api는 초당 10회 가능)
+
+                    if current_price >= target_price[coin]:
+                        amt = get_amount(coins)[coin]
+                        time.sleep(0.5)  # json error 방지
+                        jaebeom.buy_market_order(coin, start_balance * amt)
+                        time.sleep(0.5)  # json error 방지
+                        coins.remove(coin)
+
+            except Exception as e:
+                send_alarm('mail.txt', "매매 프로세스 중 에러 발생. {}. MCM을 종료합니다.".format(e))
+                break
 
         time.sleep(1)
 
 except KeyboardInterrupt:
-    print('키보드 종료')
+    print('keyboard interruption')
