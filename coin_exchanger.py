@@ -68,22 +68,48 @@ def get_amount(tickers):
     amount = dict()
 
     for ticker in tickers:
-        df = pyupbit.get_ohlcv(ticker, interval='minute60', to=datetime.datetime.now(), count=25)
-        yday = df.iloc[0]  # 어제 00:00
-        delta = abs(max(df['high']) - min(df['low'])) / yday['close']
-        tgt = 0.02  # percentage
-        ptg = (tgt / delta)/len(tickers)
-        amount[ticker] = min(ptg, 1/6)
-        time.sleep(0.1)
-        # jsonDecodeError 때문에. (candle 조회는 초당 10회 가능함. https://pyupbit.readthedocs.io/en/latest/quotation.html 참고)
 
+        df = pyupbit.get_ohlcv(ticker, interval='minute60', to=datetime.datetime.now())
+        time.sleep(0.1)  # 호출시간 에러
+
+        total = 0
+        for i in range(3):
+            total += df['close'][-1-24*i]
+        mov3 = total / 3
+
+        total = 0
+        for i in range(5):
+            total += df['close'][-1-24*i]
+        mov5 = total / 5
+
+        total = 0
+        for i in range(7):
+            total += df['close'][-1-24*i]
+        mov7 = total / 7
+
+        score = 0
+        current_price = pyupbit.get_current_price(ticker)
+
+        if current_price > mov3:
+            score += 7/15
+        if current_price > mov5:
+            score += 5/15
+        if current_price > mov7:
+            score += 3/15
+
+        yday = df.iloc[-25]  # 전날 00:00
+        delta = abs(max(df.iloc[-25:]['high']) - min(df.iloc[-25]['low'])) / yday['close']
+        tgt = 0.02  # percentage
+        ptg = (tgt / delta)/len(tickers) * score
+        amount[ticker] = min(ptg, 1/len(tickers))
+        time.sleep(0.1)  # jsonDecodeError 때문에. (candle 조회는 초당 10회 가능함. https://pyupbit.readthedocs.io/en/latest/quotation.html 참고)
 
     return amount
 
 
 def select_coin(num, major_list):  # 15초 정도 걸림.
     '''
-    3대장 + 그날 투자할 랜덤 세개 뽑아주는 메소드
+    3대장 + 그날 투자할 랜덤 세개 뽑아주는 메소드 (8월 26일부로 안씀)
     :param num: (int) 투자할 종목 수.
     :param major_list: (list) 메이저 코인 목록
     :return: (list) 투자할 코인 목록
