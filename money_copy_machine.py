@@ -5,9 +5,8 @@ jaebeom = pyupbit.Upbit(username, password)
 
 # 주문 외 Exchange API는 초당 30회 호출 가능. (https://github.com/sharebook-kr/pyupbit 참고)
 
-majors = ['KRW-BTC', 'KRW-ETH', 'KRW-XRP', 'KRW-BCH', 'KRW-ETC', 'KRW-BTG']
+coins = ['KRW-BTC', 'KRW-ETH', 'KRW-XRP', 'KRW-ADA', 'KRW-DOGE']
 k = 0.5
-coins = select_coin(6, majors)  # 투자종목 선택하는데 25초 소요
 target_price = get_target_price(coins, k)  # 목표가 계산하는데 1초 소요
 start_balance  = jaebeom.get_balance()  # 이 돈을 가지고 시작하는거다.
 now = datetime.datetime.now()
@@ -21,7 +20,6 @@ try:
         if mid < now < mid + datetime.timedelta(seconds=10):
             try:
                 renew(jaebeom, jaebeom.get_balances())
-                coins = select_coin(6, majors)
                 target_price = get_target_price(coins, k)
                 start_balance = jaebeom.get_balance()
                 mid = datetime.datetime(now.year, now.month, now.day) + datetime.timedelta(days=1)
@@ -43,6 +41,8 @@ try:
                 if current_price >= target_price[coin]:
                     amt = get_amount(coins)[coin]
                     time.sleep(0.1)  # json error 방지
+                    if amt == 0:
+                        continue
                     jaebeom.buy_market_order(coin, start_balance * amt)
                     time.sleep(0.1)  # json error 방지
                     coins.remove(coin)
@@ -56,6 +56,8 @@ try:
                     if current_price >= target_price[coin]:
                         amt = get_amount(coins)[coin]
                         time.sleep(0.5)  # json error 방지
+                        if amt == 0:
+                            continue
                         jaebeom.buy_market_order(coin, start_balance * amt)
                         time.sleep(0.5)  # json error 방지
                         coins.remove(coin)

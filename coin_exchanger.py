@@ -96,9 +96,11 @@ def get_amount(tickers):
             score += 5/15
         if current_price > mov7:
             score += 3/15
+        print(score)
 
         yday = df.iloc[-25]  # 전날 00:00
-        delta = abs(max(df.iloc[-25:]['high']) - min(df.iloc[-25]['low'])) / yday['close']
+        delta = abs(max(df.iloc[-25:]['high']) - min(df.iloc[-25:]['low'])) / yday['close']
+        print(delta)
         tgt = 0.02  # percentage
         ptg = (tgt / delta)/len(tickers) * score
         amount[ticker] = min(ptg, 1/len(tickers))
