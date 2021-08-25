@@ -1,12 +1,10 @@
 from coin_exchanger import *
 
-with open('upbit.txt') as f:
-    keys = f.readlines()
-    access_key = keys[0][:-1]
-    secret_key = keys[1]
+username, password = login('upbit.txt')
+jaebeom = pyupbit.Upbit(username, password)
 
-jaebeom = pyupbit.Upbit(access_key, secret_key)
 # 주문 외 Exchange API는 초당 30회 호출 가능. (https://github.com/sharebook-kr/pyupbit 참고)
+
 majors = ['KRW-BTC', 'KRW-ETH', 'KRW-XRP', 'KRW-BCH', 'KRW-ETC', 'KRW-BTG']
 k = 0.5
 coins = select_coin(6, majors)  # 투자종목 선택하는데 25초 소요

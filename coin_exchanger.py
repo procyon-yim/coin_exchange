@@ -134,3 +134,13 @@ def renew(user, user_account):
         if currency['currency'] != 'KRW':
             user.sell_market_order("KRW-" + currency['currency'], currency['balance'])
             time.sleep(0.2)  # json error 대비  (주문은 1초에 8회까지 가능)
+
+
+def login(login_info):
+
+    with open(login_info) as f:
+        keys = f.readlines()
+        access_key = keys[0][:-1]
+        secret_key = keys[1]
+
+    return access_key, secret_key
