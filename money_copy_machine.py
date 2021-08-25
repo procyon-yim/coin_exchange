@@ -11,7 +11,7 @@ target_price = get_target_price(coins, k)  # 목표가 계산하는데 1초 소�
 start_balance  = jaebeom.get_balance()  # 이 돈을 가지고 시작하는거다.
 now = datetime.datetime.now()
 mid = datetime.datetime(now.year, now.month, now.day) + datetime.timedelta(days=1)
-send_alarm('mail.txt', '현재 시각 {2}, 현재 잔고 {0}KRW. 매수를 시도할 코인은 {1}.'.format(int(start_balance), get_amount(coins), now))
+send_alarm('mail.txt', '현재 시각 {2}, 현재 잔고 {0}KRW. 매수 비중은 {1}.'.format(int(start_balance), get_amount(coins), now))
 
 try:
     while True:
@@ -23,7 +23,7 @@ try:
                 target_price = get_target_price(coins, k)
                 start_balance = jaebeom.get_balance()
                 mid = datetime.datetime(now.year, now.month, now.day) + datetime.timedelta(days=1)
-                send_alarm('mail.txt', '현재 시각 {2}, 현재 잔고 {0}KRW. 매수를 시도할 코인은 {1}.'.format(int(start_balance), target_price, now))
+                send_alarm('mail.txt', '현재 시각 {2}, 현재 잔고 {0}KRW. 매수 비중은 {1}.'.format(int(start_balance), target_price, now))
 
             except TypeError:
                 send_alarm('mail.txt', '자정 프로세스 중 API를 너무 많이 호출했습니다 (JSONDecodeError). MCM을 종료합니다.')

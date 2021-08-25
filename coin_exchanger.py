@@ -96,15 +96,13 @@ def get_amount(tickers):
             score += 5/15
         if current_price > mov7:
             score += 3/15
-        print(score)
 
         yday = df.iloc[-25]  # 전날 00:00
         delta = abs(max(df.iloc[-25:]['high']) - min(df.iloc[-25:]['low'])) / yday['close']
-        print(delta)
         tgt = 0.02  # percentage
         ptg = (tgt / delta)/len(tickers) * score
         amount[ticker] = min(ptg, 1/len(tickers))
-        time.sleep(0.1)  # jsonDecodeError 때문에. (candle 조회는 초당 10회 가능함. https://pyupbit.readthedocs.io/en/latest/quotation.html 참고)
+        time.sleep(0.2)  # jsonDecodeError 때문에. (candle 조회는 초당 10회 가능함. https://pyupbit.readthedocs.io/en/latest/quotation.html 참고)
 
     return amount
 
