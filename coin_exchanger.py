@@ -65,7 +65,7 @@ def get_amount(tickers):
     :param tickers: (list) 티커들의 리스트
     :return: (dict) 키=티커 / 아이템=투자비중
     '''
-    amount = dict()
+    amt = dict()
 
     for ticker in tickers:
 
@@ -84,14 +84,14 @@ def get_amount(tickers):
             delta = abs(max(df.iloc[-25:]['high']) - min(df.iloc[-25:]['low'])) / yday['close']
             tgt = 0.02  # percentage
             ptg = (tgt / delta)/len(tickers)
-            amount[ticker] = min(ptg, 1/len(tickers))
+            amt[ticker] = min(ptg, 1/len(tickers))
 
         else:
-            amount[ticker] = 0
+            amt[ticker] = 0
 
         time.sleep(0.1)  # jsonDecodeError 때문에. (candle 조회는 초당 10회 가능함. https://pyupbit.readthedocs.io/en/latest/quotation.html 참고)
 
-    return amount
+    return amt
 
 
 def select_coin(num, major_list):
