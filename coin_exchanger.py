@@ -19,8 +19,8 @@ def send_alarm(mail_info, text):
         password = file[1][:-1]
         recvEmail = file[2]
 
-    smtpName = "smtp.naver.com"  # smtp 서버 주소
-    smtpPort = 587  # smtp 포트 번호
+    smtpName = "smtp.naver.com"  # smtp server address
+    smtpPort = 587  # smtp port number
 
     msg = MIMEText(text)  # MIMEText(text , _charset = "utf8")
 
@@ -28,20 +28,20 @@ def send_alarm(mail_info, text):
     msg['From'] = sendEmail
     msg['To'] = recvEmail
 
-    s = smtplib.SMTP(smtpName, smtpPort)  # 메일 서버 연결
-    s.starttls()  # TLS 보안 처리
-    s.login(sendEmail, password)  # 로그인
-    s.sendmail(sendEmail, recvEmail, msg.as_string())  # 메일 전송, 문자열로 변환하여 보냅니다.
-    s.close()  # smtp 서버 연결을 종료합니다.
-    time.sleep(1)  # json 오류 때문에.
+    s = smtplib.SMTP(smtpName, smtpPort)  # connecting to email server
+    s.starttls()  # TLS security
+    s.login(sendEmail, password)  # login
+    s.sendmail(sendEmail, recvEmail, msg.as_string())  # sending an email
+    s.close()  # terminating smtp server connection
+    time.sleep(1)
 
 
 def get_target_price(tickers, k_value):
     '''
-    <변동성 돌파 전략>을 바탕으로 해당 일의 매수가를 구해주는 메소드
-    :param tickers: (list) 티커 목록
-    :param k_value: (float) k값. 주로 0.5인데 보수적일수록 높게, 도전적일수록 낮게
-    :return: (dict) keys = tickers / values = target price
+    This is a method that returns a target price of currencies, based on Larry Williams's Volatility breakout strategy
+    :param tickers: (list) a list of tickers (e.g. 'BTC-KRW')
+    :param k_value: (float) breakout coefficient
+    :return: (dict) keys = tickers, values = target price
     '''
 
     target = dict()
@@ -49,29 +49,27 @@ def get_target_price(tickers, k_value):
     for ticker in tickers:
 
         df = pyupbit.get_ohlcv(ticker, interval='minute60', to=datetime.datetime.now(), count=25)
-        today_open = df.iloc[-1]['close']  # 전날 00:00 종가 = 오늘 시가
+        today_open = df.iloc[-1]['close']
         yesterday_high = max(df['high'])
         yesterday_low = min(df['low'])
         target[ticker] = today_open + (yesterday_high - yesterday_low) * k_value
         time.sleep(0.1)
-        # jsonDecodeError 때문에. (candle 조회는 초당 10회 가능함. https://pyupbit.readthedocs.io/en/latest/quotation.html 참고)
 
     return target
 
 
 def get_amount(tickers):
     '''
-    전일 변동성을 바탕으로 당일 투자할 비중을 정해주는 메소드.
-    :param tickers: (list) 티커들의 리스트
-    :return: (dict) 키=티커 / 아이템=투자비중
+    This method returns an amount of current balance to be invested, based on yesterday's fluctuation range.
+    :param tickers: (list) a list of tickers
+    :return: (dict) keys = tickers, values = amount to be invested
     '''
     amt = dict()
 
     for ticker in tickers:
 
         df = pyupbit.get_ohlcv(ticker, interval='minute60', to=datetime.datetime.now())
-        time.sleep(0.1)  # 호출시간 에러
-
+        time.sleep(0.1)
         total = 0
         for i in range(5):
             total += df['close'][-1-24*i]
@@ -80,16 +78,16 @@ def get_amount(tickers):
         current_price = pyupbit.get_current_price(ticker)
         if current_price > mov5:
 
-            yday = df.iloc[-25]  # 전날 00:00
+            yday = df.iloc[-25]
             delta = abs(max(df.iloc[-25:]['high']) - min(df.iloc[-25:]['low'])) / yday['close']
-            tgt = 0.02  # percentage
+            tgt = 0.02
             ptg = (tgt / delta)/len(tickers)
             amt[ticker] = min(ptg, 1/len(tickers))
 
         else:
             amt[ticker] = 0
 
-        time.sleep(0.1)  # jsonDecodeError 때문에. (candle 조회는 초당 10회 가능함. https://pyupbit.readthedocs.io/en/latest/quotation.html 참고)
+        time.sleep(0.1)
 
     return amt
 
@@ -138,16 +136,16 @@ def select_coin(num, major_list):
 
 def renew(user, user_account):
     '''
-    매일 12시에 계좌 리셋해주는 메소드
-    :param user: (class: Upbit) 사용자 계정
-    :param user_account: (dict) 사용자 계좌 현황 딕셔너리 (user.get_balances())
+    This method renews the user's balance every 00:00
+    :param user: (class: Upbit) user's account
+    :param user_account: (dict) user's balance. (user.get_balances())
     :return: None.
     '''
-    for currency in user_account:  # 계좌 완전히 리셋
+    for currency in user_account:
 
         if currency['currency'] != 'KRW':
             user.sell_market_order("KRW-" + currency['currency'], currency['balance'])
-            time.sleep(0.2)  # json error 대비  (주문은 1초에 8회까지 가능)
+            time.sleep(0.2)
 
 
 def login(login_info):
