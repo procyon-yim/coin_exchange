@@ -4,7 +4,8 @@ import datetime
 import smtplib
 from email.mime.text import MIMEText
 import random
-
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
 
 def send_alarm(mail_info, text):
     '''
@@ -158,5 +159,26 @@ def login(login_info):
     return access_key, secret_key
 
 
-print(get_amount(['KRW-BTC', 'KRW-ETH', 'KRW-XRP', 'KRW-ADA', 'KRW-DOGE']))
-print(sum(get_amount(['KRW-BTC', 'KRW-ETH', 'KRW-XRP', 'KRW-ADA', 'KRW-DOGE']).values()))
+def logger(google_info, balance):
+    '''
+    구글 스프레드시트에 매일 자산 현황을 업데이트 해주는 메소드
+    :param google_info: json 파일
+    :param balance: 현재 자산
+    :return:
+    '''
+    scope = [
+        'https://spreadsheets.google.com/feeds',
+        'https://www.googleapis.com/auth/drive',
+    ]
+    json_file_name = google_info
+    credentials = ServiceAccountCredentials.from_json_keyfile_name(json_file_name, scope)
+    gc = gspread.authorize(credentials)
+    spreadsheet_url = 'https://docs.google.com/spreadsheets/d/1Cs8FipYPmQqGY8wB3MvPNIH7iJ5xrqutslQK2IzhfeM/edit#gid=0'
+    # 스프레스시트 문서 가져오기
+    doc = gc.open_by_url(spreadsheet_url)
+    # 시트 선택하기
+    worksheet = doc.worksheet('data')
+    now = datetime.datetime.now()
+    date = str(now.year)+'/'+str(now.month)+'/'+str(now.day)
+    worksheet.update_cell(now.day, now.month*2-1, date)
+    worksheet.update_cell(now.day, now.month*2, str(balance))
