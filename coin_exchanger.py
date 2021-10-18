@@ -7,6 +7,7 @@ import random
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 
+
 def send_alarm(mail_info, text):
     '''
     이메일 보내주는 메소드
