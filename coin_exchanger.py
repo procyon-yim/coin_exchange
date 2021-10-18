@@ -183,3 +183,7 @@ def logger(google_info, balance):
     date = str(now.year)+'/'+str(now.month)+'/'+str(now.day)
     worksheet.update_cell(now.day, now.month*2-1, date)
     worksheet.update_cell(now.day, now.month*2, str(balance))
+
+    worksheet2 = doc.worksheet('btc')
+    worksheet2.update_cell(now.day, now.month*2-1, date)
+    worksheet2.update_cell(now.day, now.month*2, pyupbit.get_current_price('KRW-BTC'))
