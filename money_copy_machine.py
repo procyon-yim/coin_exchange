@@ -11,6 +11,7 @@ start_balance  = user.get_balance()
 now = datetime.datetime.now()
 mid = datetime.datetime(now.year, now.month, now.day) + datetime.timedelta(days=1)
 send_alarm('mail.txt', 'Current time is {2}, Current Balance is {0}KRW. Today\'s targets are {1}.'.format(int(start_balance), amount, now))
+logger('tokyo-house-329423-16dfe2804ccf.json', str(user.get_balance()))
 
 try:
     while True:
