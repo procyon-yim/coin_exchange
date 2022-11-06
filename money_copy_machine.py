@@ -1,6 +1,6 @@
 from coin_exchanger import *
 
-username, password = login('upbit.txt')
+username, password = login('/home/ubuntu/crypto_exchanger/coin_exchange/upbit.txt')
 user = pyupbit.Upbit(username, password)
 
 coins = ['KRW-BTC', 'KRW-ETH', 'KRW-XRP', 'KRW-ADA', 'KRW-DOGE']  # list of coins to exchange
@@ -10,8 +10,8 @@ target_price = get_target_price(coins, k)
 start_balance  = user.get_balance()
 now = datetime.datetime.now()
 mid = datetime.datetime(now.year, now.month, now.day) + datetime.timedelta(days=1)
-send_alarm('mail.txt', 'Current time is {2}, Current Balance is {0}KRW. Today\'s targets are {1}.'.format(int(start_balance), amount, now))
-logger('tokyo-house-329423-16dfe2804ccf.json', str(user.get_balance()))
+send_alarm('/home/ubuntu/crypto_exchanger/coin_exchange/mail.txt', 'Current time is {2}, Current Balance is {0}KRW. Today\'s targets are {1}.'.format(int(start_balance), amount, now))
+logger('/home/ubuntu/crypto_exchanger/coin_exchange/tokyo-house-329423-16dfe2804ccf.json', str(user.get_balance()))
 
 try:
     while True:
@@ -27,15 +27,15 @@ try:
                 start_balance = user.get_balance()
                 now = datetime.datetime.now()
                 mid = datetime.datetime(now.year, now.month, now.day) + datetime.timedelta(days=1)
-                send_alarm('mail.txt', 'Current time is {2}, Current Balance is {0}KRW. Today\'s targets are {1}.'.format(int(start_balance), amount, now))
-                logger('tokyo-house-329423-16dfe2804ccf.json', str(start_balance))
+                send_alarm('/home/ubuntu/crypto_exchanger/coin_exchange/mail.txt', 'Current time is {2}, Current Balance is {0}KRW. Today\'s targets are {1}.'.format(int(start_balance), amount, now))
+                logger('/home/ubuntu/crypto_exchanger/coin_exchange/tokyo-house-329423-16dfe2804ccf.json', str(start_balance))
 
             except TypeError:
-                send_alarm('mail.txt', 'JSONDecodeError. Terminating MCM.')
+                send_alarm('/home/ubuntu/crypto_exchanger/coin_exchange/mail.txt', 'JSONDecodeError. Terminating MCM.')
                 break
 
             except Exception as e:
-                send_alarm('mail.txt', 'An error occured during 00:00 process. {} Terminating MCM.'.format(e))
+                send_alarm('/home/ubuntu/crypto_exchanger/coin_exchange/mail.txt', 'An error occured during 00:00 process. {} Terminating MCM.'.format(e))
                 break
 
         try:
@@ -72,7 +72,7 @@ try:
                             coins.remove(coin)
 
             except Exception as e:
-                send_alarm('mail.txt', "An error occured while making an exchanging. {}. Terminating MCM.".format(e))
+                send_alarm('/home/ubuntu/crypto_exchanger/coin_exchange/mail.txt', "An error occured while making an exchanging. {}. Terminating MCM.".format(e))
                 break
 
         time.sleep(1)
