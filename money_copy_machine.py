@@ -1,10 +1,11 @@
 from coin_exchanger import *
+import sys
 
 username, password = login('/home/ubuntu/crypto_exchanger/coin_exchange/upbit.txt')
 user = pyupbit.Upbit(username, password)
 
 coins = ['KRW-BTC', 'KRW-ETH', 'KRW-XRP', 'KRW-ADA', 'KRW-DOGE']  # list of coins to exchange
-k = 0.5  # breakout coefficient (see https://www.whselfinvest.com/en-lu/trading-platform/free-trading-strategies/tradingsystem/56-volatility-break-out-larry-williams-free)
+k = sys.argv[1]  # breakout coefficient (see https://www.whselfinvest.com/en-lu/trading-platform/free-trading-strategies/tradingsystem/56-volatility-break-out-larry-williams-free)
 amount = get_amount(coins)
 target_price = get_target_price(coins, k)
 start_balance  = user.get_balance()
