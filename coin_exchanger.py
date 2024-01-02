@@ -8,19 +8,21 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 
 
-def send_alarm(mail_info, text):
+def send_alarm(text):
     '''
     이메일 보내주는 메소드
     :param mail_info: (str) 메일 보내는 주소, 받는 주소, 보내는 주소의 비밀번호가 담긴 텍스트 파일 이름
     :param text: (str) 보낼 메세지
     :return: None
     '''
-    with open(mail_info) as f:
-        file = f.readlines()
-        sendEmail = file[0][:-1]
-        password = file[1][:-1]
-        recvEmail = file[2]
-
+    # with open(mail_info) as f:
+    #     file = f.readlines()
+    #     sendEmail = file[0][:-1]
+    #     password = file[1][:-1]
+    #     recvEmail = file[2]
+    sendEmail = "max5972@naver.com"
+    password = "Gen314^^"
+    recvEmail = "procyon.yim@gmail.com"
     smtpName = "smtp.naver.com"  # smtp server address
     smtpPort = 587  # smtp port number
 
@@ -36,7 +38,6 @@ def send_alarm(mail_info, text):
     s.sendmail(sendEmail, recvEmail, msg.as_string())  # sending an email
     s.close()  # terminating smtp server connection
     time.sleep(1)
-
 
 def get_target_price(tickers, k_value):
     '''
