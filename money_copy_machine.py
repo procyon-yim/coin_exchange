@@ -1,18 +1,19 @@
 from coin_exchanger import *
-import sys
 
-username, password = login('/home/ubuntu/crypto_exchanger/coin_exchange/upbit.txt')
+username = "Xaveynt6kyfrx3Ojtxj0KoSdpHcgn93TBe795kY1"
+password = "0aS1edeSChokCMQbUkzs3xOURz5g731ipvopNt1c"
 user = pyupbit.Upbit(username, password)
 
 coins = ['KRW-BTC', 'KRW-ETH', 'KRW-XRP', 'KRW-ADA', 'KRW-DOGE']  # list of coins to exchange
-k = sys.argv[1]  # breakout coefficient (see https://www.whselfinvest.com/en-lu/trading-platform/free-trading-strategies/tradingsystem/56-volatility-break-out-larry-williams-free)
+k = 0.5
+# breakout coefficient (see https://www.whselfinvest.com/en-lu/trading-platform/free-trading-strategies/tradingsystem/56-volatility-break-out-larry-williams-free)
 amount = get_amount(coins)
 target_price = get_target_price(coins, k)
 start_balance  = user.get_balance()
 now = datetime.datetime.now()
 mid = datetime.datetime(now.year, now.month, now.day) + datetime.timedelta(days=1)
-send_alarm('/home/ubuntu/crypto_exchanger/coin_exchange/mail.txt', 'Current time is {2}, Current Balance is {0}KRW. Today\'s targets are {1}.'.format(int(start_balance), amount, now))
-logger('/home/ubuntu/crypto_exchanger/coin_exchange/tokyo-house-329423-16dfe2804ccf.json', str(user.get_balance()))
+notification = 'Current time is {2}, Current Balance is {0}KRW. Today\'s targets are {1}.'.format(int(start_balance), amount, now)
+send_alarm(notification)
 
 try:
     while True:
@@ -28,15 +29,16 @@ try:
                 start_balance = user.get_balance()
                 now = datetime.datetime.now()
                 mid = datetime.datetime(now.year, now.month, now.day) + datetime.timedelta(days=1)
-                send_alarm('/home/ubuntu/crypto_exchanger/coin_exchange/mail.txt', 'Current time is {2}, Current Balance is {0}KRW. Today\'s targets are {1}.'.format(int(start_balance), amount, now))
-                logger('/home/ubuntu/crypto_exchanger/coin_exchange/tokyo-house-329423-16dfe2804ccf.json', str(start_balance))
-
+                notification = 'Current time is {2}, Current Balance is {0}KRW. Today\'s targets are {1}.'.format(int(start_balance), amount, now)
+                send_alarm(notification)
             except TypeError:
-                send_alarm('/home/ubuntu/crypto_exchanger/coin_exchange/mail.txt', 'JSONDecodeError. Terminating MCM.')
+                notification = "An unexpected error occured. Terminating program. Please reboot via the mobile AWS application"
+                send_alarm(notification)
                 break
 
             except Exception as e:
-                send_alarm('/home/ubuntu/crypto_exchanger/coin_exchange/mail.txt', 'An error occured during 00:00 process. {} Terminating MCM.'.format(e))
+                notification = "An unexpected error occured. Terminating program. Please reboot via the mobile AWS application"
+                send_alarm(notification)
                 break
 
         try:
@@ -73,7 +75,8 @@ try:
                             coins.remove(coin)
 
             except Exception as e:
-                send_alarm('/home/ubuntu/crypto_exchanger/coin_exchange/mail.txt', "An error occured while making an exchanging. {}. Terminating MCM.".format(e))
+                notification = "An unexpected error occured. Terminating program. Please reboot via the mobile AWS application"
+                send_alarm(notification)
                 break
 
         time.sleep(1)
